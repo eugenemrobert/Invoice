@@ -1,9 +1,9 @@
-export default function MainDetails (){
+export default function MainDetails({name, address}){
     return (
         <>
         <section className="flex flex-col items-end justify-end">
-            <h2 className="text-xl uppercase">Eugene Muloma</h2>
-            <p>Your Address</p>
+            <h2 className="font-bold md:text-4xl text-xl uppercase">{name}</h2>
+                <p>{address}</p>
          </section>
         </>
     )
