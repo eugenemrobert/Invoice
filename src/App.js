@@ -6,23 +6,29 @@ import Notes  from "./components/Notes";
 import Header from "./components/Header";
 import MainDetails from "./components/MainDetails";
 import ClientDetails from "./components/ClientDetails";
+import TableForm from "./components/TableForm";
 
 function App() {
 
-  const [showInvoice, setShowInvoice] = useState(false)
-  const [name, setName] = useState("")
-  const [address, setAddress] = useState("")
-  const [email, setEmail] = useState("")
-  const [phone, setPhone] = useState("")
-  const [bankName, setBankName] = useState("")
-  const [bankAccount, setBankAccount] = useState("")
-  const [clientName, setClientName] = useState("")
-  const [clientAddress, setClientAddress] = useState("")
-  const [invoiceNumber, setInvoiceNumber] = useState("")
-  const [invoiceDate, setInvoiceDate] = useState("")
-  const [dueDate, setDueDate] = useState("")
-  const [notes, setNotes] = useState("")
-  const [website, setWebsite] = useState("")
+  const [showInvoice, setShowInvoice] = useState(true)
+  const [name, setName] = useState("Eugene M")
+  const [address, setAddress] = useState("Nairobi")
+  const [email, setEmail] = useState("eugene@blist.co.ke")
+  const [phone, setPhone] = useState("0712 345 678")
+  const [bankName, setBankName] = useState("Equity")
+  const [bankAccount, setBankAccount] = useState("123-345-789")
+  const [clientName, setClientName] = useState("JOhn Doe")
+  const [clientAddress, setClientAddress] = useState("Kajiado")
+  const [invoiceNumber, setInvoiceNumber] = useState("1000")
+  const [invoiceDate, setInvoiceDate] = useState("20/10/2022")
+  const [dueDate, setDueDate] = useState("21/01/2023")
+  const [notes, setNotes] = useState("Some additional notes")
+  const [website, setWebsite] = useState("https://blist.co.ke")
+  const [description, setDescription] = useState("")
+  const [quantity, setQuantity] = useState("")
+  const [price, setPrice] = useState("")
+  const [amount, setAmount] = useState("")
+  const [list, setList] = useState([])
 
   const handlePrint = ()=>{
     window.print()
@@ -39,7 +45,14 @@ function App() {
 
           <Dates invoiceNumber={invoiceNumber} invoiceDate={invoiceDate} dueDate={dueDate} />
 
-          <Table />
+          <Table
+            description={description}
+            quantity={quantity}
+            price={price}
+            amount={amount}
+            list={list}
+            setList={setList}
+          />
 
           <Notes notes={notes} />
 
@@ -220,6 +233,20 @@ function App() {
                     onChange={(e)=>setDueDate(e.target.value)}
                     />
                   </div>
+                </article>
+
+                <article>
+                  <TableForm
+                    description={description} setDescription={setDescription}
+                    quantity={quantity}
+                    setQuantity={setQuantity}
+                    price={price}
+                    setPrice={setPrice}
+                    amount={amount}
+                    setAmount={setAmount}
+                    list={list}
+                    setList={setList}
+                  />
                 </article>
 
                 <label htmlFor="note">Additional notes</label>
