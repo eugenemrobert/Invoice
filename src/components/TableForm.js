@@ -1,5 +1,6 @@
-import React, { useEffect } from "react"
-import{v4 as uuidv4} from "uuid"
+import React, { useState, useEffect } from "react"
+import { v4 as uuidv4 } from "uuid"
+import {AiOutlineDelete, AiOutlineEdit} from "react-icons/ai"
 
 export default function TableForm({
     description,
@@ -11,9 +12,14 @@ export default function TableForm({
     amount,
     setAmount,
     list,
-    setList
+    setList,
+    total,
+    setTotal
 }) {
-    
+    const [isEditing, setIsEditing] = useState(false)
+
+
+    // Submit form function
     const handleSubmit = (e) => {
         e.preventDefault()
 
@@ -29,14 +35,45 @@ export default function TableForm({
         setPrice("")
         setAmount("")
         setList([...list, newItems])
-        console.log(list)
+        setIsEditing(false)
     }
+
+    // Calculate items amount function
     useEffect(() => {
         const calcAmount = (amount) => {
             setAmount(quantity * price)
         }
         calcAmount(amount)
     }, [amount, quantity, price, setAmount])
+
+    // Calculate total amount of table items
+    useEffect(() => {
+        let rows = document.querySelectorAll(".amount")
+    let sum = 0
+
+    for (let i = 0; i < rows.length; i++) {
+        if (rows[i].className === "amount") {
+            sum += isNaN(rows[i].innerHTML) ? 0 : parseInt(rows[i].innerHTML)
+            setTotal(sum)
+        }
+    }
+    })
+
+    //Edit function
+    const editRow = (id) => {
+        const editingRow = list.find((row) => row.id === id)
+        setList(list.filter((row)=> row.id !== id))
+        setIsEditing(true)
+        setDescription(editingRow.description)
+        setQuantity(editingRow.quantity)
+        setPrice(editingRow.price)
+    }
+
+    // Delete function
+    const deleteRow = (id) => {
+        setList(list.filter((row)=> row.id !== id))
+    }
+
 
     return (
         <>
@@ -53,7 +90,7 @@ export default function TableForm({
                 />
             </div>
 
-            <div className="md:grid grid-cols-3 gap-10S">
+            <div className="md:grid grid-cols-3 gap-10">
             <div className="flex flex-col">
                 <label htmlFor="quantity">Quantity</label>
                 <input
@@ -84,7 +121,9 @@ export default function TableForm({
             </div>
             </div>
                 <button
-                    type="submit" className="mb-5 bg-blue-500 text-white font-bold py-2 px-8 rounded shadow border-2 border-blue-500 hover:bg-transparent hover:text-blue-500 transition-all duration-300">Add Table item</button>
+                    type="submit" className="mb-5 bg-blue-500 text-white font-bold py-2 px-8 rounded shadow border-2 border-blue-500 hover:bg-transparent hover:text-blue-500 transition-all duration-300">
+                    {isEditing ? "Editing Item Row" : "Add Table Item"}
+                    </button>
             </form>
 
             {/* Table items */}
@@ -104,12 +143,17 @@ export default function TableForm({
                             <td>{description}</td>
                             <td>{quantity}</td>
                             <td>{price}</td>
-                            <td>{amount}</td>
+                            <td className="amount">{amount}</td>
+                            <td><button onClick={() => deleteRow(id)}><AiOutlineDelete className="text-red-500 font-bold text-xl" /></button></td>
+                            <td><button onClick={()=>editRow(id)}><AiOutlineEdit className="text-green-500 font-bold text-xl"/></button></td>    
                         </tr>
                     </tbody>
                     </React.Fragment>
                 ))}
             </table>
+            <div>
+                <h2 className="flex items-end justify-end text-gray-800 text-4xl font-bold">Kshs. {total.toLocaleString()}</h2>
+            </div>
         </>
     )
 }
