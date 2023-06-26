@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Dates from "./components/Dates";
 import Table from "./components/Table";
 import Footer from "./components/Footer";
@@ -7,23 +7,24 @@ import Header from "./components/Header";
 import MainDetails from "./components/MainDetails";
 import ClientDetails from "./components/ClientDetails";
 import TableForm from "./components/TableForm";
+import ReactToPrint from "react-to-print"
 
 function App() {
 
-  const [showInvoice, setShowInvoice] = useState(true)
-  const [name, setName] = useState("Eugene M")
-  const [address, setAddress] = useState("Nairobi")
-  const [email, setEmail] = useState("eugene@blist.co.ke")
-  const [phone, setPhone] = useState("0712 345 678")
-  const [bankName, setBankName] = useState("Equity")
-  const [bankAccount, setBankAccount] = useState("123-345-789")
-  const [clientName, setClientName] = useState("JOhn Doe")
-  const [clientAddress, setClientAddress] = useState("Kajiado")
-  const [invoiceNumber, setInvoiceNumber] = useState("1000")
-  const [invoiceDate, setInvoiceDate] = useState("20/10/2022")
-  const [dueDate, setDueDate] = useState("21/01/2023")
-  const [notes, setNotes] = useState("Some additional notes")
-  const [website, setWebsite] = useState("https://blist.co.ke")
+  const [showInvoice, setShowInvoice] = useState(false)
+  const [name, setName] = useState("")
+  const [address, setAddress] = useState("")
+  const [email, setEmail] = useState("")
+  const [phone, setPhone] = useState("")
+  const [bankName, setBankName] = useState("")
+  const [bankAccount, setBankAccount] = useState("")
+  const [clientName, setClientName] = useState("")
+  const [clientAddress, setClientAddress] = useState("")
+  const [invoiceNumber, setInvoiceNumber] = useState("")
+  const [invoiceDate, setInvoiceDate] = useState("")
+  const [dueDate, setDueDate] = useState("")
+  const [notes, setNotes] = useState("")
+  const [website, setWebsite] = useState("")
   const [description, setDescription] = useState("")
   const [quantity, setQuantity] = useState("")
   const [price, setPrice] = useState("")
@@ -31,13 +32,19 @@ function App() {
   const [list, setList] = useState([])
   const [total, setTotal] = useState(0)
 
-  const handlePrint = ()=>{
+  const componentRef = useRef()
+  
+  const handlePrint = () => {
     window.print()
   }
   return (
     <>
       <main className="m-5 p-5 md:max-w-xl md:mx-auto lg:max-w-2xl xl:max-w-4xl bg-white rounded shadow">
-        {showInvoice ? <div>
+        {showInvoice ? (
+          <>
+          <ReactToPrint trigger={() => <button className="bg-blue-500 ml-5 text-white font-bold py-2 px-8 rounded shadow border-2 border-blue-500 hover:bg-transparent hover:text-blue-500 transition-all duration-300">Print / Download</button>}
+          content={()=>componentRef.current}/>
+          <div ref={componentRef} className="p-5">
           <Header handlePrint={handlePrint}/>
 
           <MainDetails name={name} address={address} />
@@ -67,9 +74,10 @@ function App() {
             phone={phone}
             bankAccount={bankAccount}
             bankName={bankName} />
-
-          <button onClick={()=>setShowInvoice(false)} className=" mt-5 bg-blue-500 text-white font-bold py-2 px-8 rounded shadow border-2 border-blue-500 hover:bg-transparent hover:text-blue-500 transition-all duration-300">Edit Information</button>
-        </div> :(
+        </div>
+            <button onClick={() => setShowInvoice(false)} className=" mt-5 ml-5 bg-blue-500 text-white font-bold py-2 px-8 rounded shadow border-2 border-blue-500 hover:bg-transparent hover:text-blue-500 transition-all duration-300">Edit Information</button>
+        </>
+         ) : (
           <>
               <div className="flex flex-col justify-center">
                 <article className="md:grid grid-cols-2 gap-10">
